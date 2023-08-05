@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="ResultWindow" fx:id="FFWAnchorPane" prefHeight="453.0" prefWidth="1200.0" stylesheets="@../../../Styles/MainWindowStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.duplcatesearcher.FoundFilesWindowController">
+   <Button fx:id="ExitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="570.0" layoutY="404.0" mnemonicParsing="false" text="Закрыть" AnchorPane.leftAnchor="536.0" AnchorPane.rightAnchor="523.2">
+      <font>
+         <Font name="Hack Regular" size="12.0" />
+      </font>
+   </Button>
+   <Text id="ResultWindowLabel" layoutX="548.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Результаты поиска" AnchorPane.leftAnchor="536.0" AnchorPane.rightAnchor="523.2">
+      <font>
+         <Font name="Hack Regular" size="12.0" />
+      </font>
+   </Text>
+   <TableView fx:id="DuplicatesTable" layoutX="25.0" layoutY="50.0" minHeight="300.0" minWidth="1150.0" prefHeight="300.0" prefWidth="1150.0">
+     <columns>
+         <TableColumn fx:id="isOriginalColumn" minWidth="80.0" text="Метка" />
+         <TableColumn fx:id="isSelectedColumn" minWidth="65.0" prefWidth="65.0" resizable="false" text="Удалить" />
+       <TableColumn fx:id="FileNameColumn" minWidth="325.0" prefWidth="325.0" text="Имя" />
+       <TableColumn fx:id="SizeColumn" minWidth="100.0" prefWidth="100.0" text="Размер, Мб" />
+         <TableColumn fx:id="DateColumn" minWidth="300.0" prefWidth="100.0" text="Дата создания" />
+         <TableColumn fx:id="PathColumn" minWidth="280.0" prefWidth="280.0" text="Путь" />
+     </columns>
+   </TableView>
+   <Button fx:id="DeleteSelectedButton" layoutX="502.0" layoutY="372.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="214.0" text="Удалить выбранные" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="502.0" AnchorPane.rightAnchor="484.0" />
+</AnchorPane>

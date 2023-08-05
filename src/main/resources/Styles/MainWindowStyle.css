@@ -1,0 +1,110 @@
+.AnchorPane{
+    -fx-background-color: #0A1F32;
+}
+
+.FilesArea{
+    -fx-background-color: #2D384A;
+}
+
+.LogsArea{
+    -fx-background-color: #344756;
+}
+
+.text{
+	-fx-font-family: Hack;
+	
+}
+
+.label{
+    -fx-text-fill: #D2D2D2;
+	-fx-font-size: 20px;
+}
+
+#Parameters{
+	-fx-font-size: 16px;
+}
+
+
+.button {
+    -fx-text-fill:#0A1F32;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-background-color: rgb(255,255,255);
+    -fx-border-color: #1759f2;
+
+}
+
+
+
+.button:hover {
+	-fx-scale-x: 1.1;
+	-fx-scale-y: 1.1;
+	-fx-text-fill: #1759f2;
+}
+.button:active {
+
+}
+
+.check-box{
+	-fx-scale-x: 1.2;
+	-fx-scale-y: 1.2;
+	-fx-text-fill: #D2D2D2;
+}
+
+.check-box .box {
+	-fx-background-color: #D2D2D2;
+	-fx-border-color:grey;
+	-fx-border-radius:1px; 
+
+
+}
+
+.check-box:selected .mark {
+
+-fx-background-color: #D2D2D2;
+
+}
+
+.check-box:selected .box {
+
+-fx-background-color: #344756;
+}
+
+.image-view:hover{
+	-fx-opacity: 1;
+	-fx-scale-x: 1.1;
+	-fx-scale-y: 1.1;
+}
+	
+.table-view .label{
+	-fx-text-fill: #000000;
+	-fx-font-size: 12px;
+	
+	
+
+}
+
+.table-view{
+	-fx-background-color: #344750;
+	-fx-background-radius: 6;
+	-fx-border-radius:6;
+}
+
+#ResultWindowLabel{
+	-fx-fill: #D2D2D2;
+}
+
+#ResultWindow  {
+	-fx-background-color: #2D384A;
+	
+}
+
+.table-view .label {
+	-fx-text-fill: #D2D2D2;
+}
+
+.table-column{
+	-fx-background-color: #344756;
+	-fx-border-color: #344756;
+	-fx-text-fill: #D2D2D2;
+}
