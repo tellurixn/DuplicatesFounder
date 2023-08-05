@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeletingController {
+public class ProgressController {
 
     @FXML
     private Button ExitButton;
@@ -27,10 +27,14 @@ public class DeletingController {
     private TextField fileNameText;
 
     @FXML
+    private Text numberOfFiles;
+
+    @FXML
     private Label processLabel;
 
     @FXML
     private ProgressBar progressBar;
+
     List<File> targets;//Список файлов для удаления
 
     public void setTargets(List<File> targets){
@@ -71,43 +75,41 @@ public class DeletingController {
 
     }
 
-    private long Size;
-
-    public void SetSize (long Size){
-        this.Size = Size;
-    }
-
     public void setCurrentFileName(String name){
         fileNameText.setText(name);
     }
 
-    public long GetCize(){
-        return  Size;
-    }
+
 
     public void setProgress(double progress){
         progressBar.setProgress(progress);
     }
 
-    public void addProgress(double Size){
-        progressBar.setProgress(progressBar.getProgress()+Size);
-    }
-    public double getPercent(){
-        return 1/ (double) this.Size;
-    }
+
     public void showSuccess(){
         fileNameText.setVisible(false);
         processLabel.setVisible(false);
         SuccessMessage.setVisible(true);
+        numberOfFiles.setVisible(false);
     }
 
     public double getProgress(){
         return  progressBar.getProgress();
     }
+
+    public void showWithoutProgressBar(){
+        SuccessMessage.setVisible(false);
+        progressBar.setVisible(false);
+
+    }
+
+    public void updateNumberOfFiles(int newNumber){
+        numberOfFiles.setText("Найдено файлов: " + newNumber);
+    }
     @FXML
     void initialize() {
         targets = new ArrayList<>();
-        Size = 0;
+
 
         ExitButton.setOnAction(actionEvent -> {
             //Закрытие окна

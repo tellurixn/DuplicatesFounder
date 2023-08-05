@@ -1,5 +1,6 @@
 package com.example.duplcatesearcher;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,32 +54,24 @@ public class MainViewController {
 
 
     //Метод для отображения списка файлов в указанной директории
-    private void showList(){
+    private void makeListOfFiles(){
         //По выбранной директори выполняем поиск файлов в новом потоке
+
         fileListGetter = new DirectoryFileListGetter(Paths.get(DirectoryPath.getText()));
-        Thread thread = new Thread(fileListGetter);
-        System.out.println("NEW THREAD " + thread.getName());
-        thread.start();
-        try {
-            thread.join();
-        }
-        catch (InterruptedException e){
-            e.printStackTrace();
-        }
 
+        fileListGetter.run(this);
+    }
 
+    public void writeFileList(){
         List<Path> list = fileListGetter.getListOfFilesFromMainDirectory();//Список файлов директории и вложенных директорий
 
         //Проверка кол-ва файло
         if(list.size() > 100){
-
-
-
             //Если файлов много записываем в файл
             try {
 
                 File foundFiles = new File("Out.txt");
-                FileWriter fw = new FileWriter(foundFiles, true);
+                FileWriter fw = new FileWriter(foundFiles, false);
                 PrintWriter printWriter = new PrintWriter(fw);
 
                 for(Path path : list)
@@ -102,10 +95,6 @@ public class MainViewController {
                 FilesArea.appendText(file.toString() + "\n");
             }
         }
-
-
-
-
     }
 
     //Поиск вхождения введенной строки в имени файла
@@ -286,7 +275,7 @@ public class MainViewController {
 
 
         //Проверка полей на заполнение
-        if(!DirectoryPath.getText().isEmpty() && !FileNameField.getText().isEmpty()
+        if(!DirectoryPath.getText().isEmpty() && !FileNameField.getText().isEmpty() && !fileListGetter.isWasCanceles()
                 && (NameCheckBox.isSelected() || SizeCheckBox.isSelected() || DateCheckBox.isSelected()) || ContentCheckBox.isSelected()) {
             HashMap<Integer,Path> foundFiles = findMatches(fileListGetter);//Записываем в хэшмап дубликаты в директории
 
@@ -340,7 +329,14 @@ public class MainViewController {
         }
         else {
             //Вывод окна с ошибкой, если одно из полей не заполнено
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Некоторые поля не заполнены!", ButtonType.OK);
+            Alert alert;
+            if(fileListGetter.isWasCanceles()){
+                alert = new Alert(Alert.AlertType.ERROR,"Вы отменили поиск!", ButtonType.OK);
+            }
+            else {
+                alert = new Alert(Alert.AlertType.ERROR, "Некоторые поля не заполнены!", ButtonType.OK);
+            }
+
             alert.showAndWait();
 
             if (alert.getResult() == ButtonType.OK) {
@@ -394,7 +390,7 @@ public class MainViewController {
                 //Установка пути к директории в поле
                 DirectoryPath.setText(selectedDirectory);
 
-                showList();
+                makeListOfFiles();
 
             }
         });

@@ -5,9 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="MainWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="800.0" styleClass="AnchorPane" stylesheets="@../../../Styles/MainWindowStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.duplcatesearcher.MainViewController">
@@ -17,18 +16,13 @@
       <CheckBox fx:id="ContentCheckBox" layoutX="360.0" layoutY="315.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="200.0" text="Содержимое" AnchorPane.leftAnchor="355.0" AnchorPane.rightAnchor="250.0" />
       <CheckBox fx:id="DateCheckBox" layoutX="357.0" layoutY="280.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="200.0" text="Дата создания" AnchorPane.leftAnchor="355.0" AnchorPane.rightAnchor="250.0" />
       <CheckBox fx:id="NameCheckBox" layoutX="355.0" layoutY="210.0" minWidth="100.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="200.0" text="Имя" AnchorPane.leftAnchor="355.0" AnchorPane.rightAnchor="250.0" />
-      <ImageView fx:id="GitHubIcon" fitHeight="80.0" fitWidth="80.0" layoutX="720.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../Images/GitHubIcon.png" />
-         </image>
-      </ImageView>
       <Button fx:id="DirectoryChooseButton" layoutX="545.0" layoutY="78.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="...">
          <font>
             <Font name="Hack Regular" size="12.0" />
          </font>
       </Button>
       <Label fx:id="InfoLabel" layoutX="199.0" layoutY="14.0" prefHeight="38.0" prefWidth="418.0" text="Поиск и удаление дубликатов файлов" />
-      <TextField fx:id="DirectoryPath" layoutX="186.0" layoutY="78.0" prefHeight="26.0" prefWidth="359.0" promptText="Путь к директории..." />
+      <TextField fx:id="DirectoryPath" editable="false" layoutX="186.0" layoutY="78.0" prefHeight="26.0" prefWidth="359.0" promptText="Путь к директории..." />
       <Button id="SearchButton" fx:id="SearchButton" layoutX="324.0" layoutY="361.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="185.0" text="Поиск дубликатов" />
       <AnchorPane fx:id="LogsAnchorPane" layoutY="425.0" prefHeight="350.0" prefWidth="800.0" stylesheets="@../../../Styles/MainWindowStyle.css">
          <children>
@@ -40,5 +34,6 @@
       </AnchorPane>
       <Label layoutX="247.0" layoutY="131.0" text="Имя файла" />
       <Label id="Parameters" layoutX="345.0" layoutY="180.0" text="Параметры поиска" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

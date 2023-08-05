@@ -130,9 +130,9 @@ public class FoundFilesWindowController {
                     }
 
                     try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Deleting.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Progress.fxml"));
                         Parent root = (Parent) fxmlLoader.load();
-                        DeletingController controller = fxmlLoader.getController();
+                        ProgressController controller = fxmlLoader.getController();
                         controller.setTargets(targets);
                         Stage stage = new Stage();
                         stage.setScene(new Scene(root));
