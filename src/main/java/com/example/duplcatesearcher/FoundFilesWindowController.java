@@ -129,20 +129,23 @@ public class FoundFilesWindowController {
                         }
                     }
 
+
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Progress.fxml"));
                         Parent root = (Parent) fxmlLoader.load();
                         ProgressController controller = fxmlLoader.getController();
-                        controller.setTargets(targets);
                         Stage stage = new Stage();
                         stage.setScene(new Scene(root));
+                        stage.setResizable(false);
                         stage.show();
+                        controller.setTargets(targets);
                         controller.delete();
 
-
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
+
 
                 }
             }

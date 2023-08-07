@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -22,26 +23,46 @@ public class MainViewController {
 
     @FXML
     private Button CleanFiles;
+
     @FXML
     private Button CleanLogs;
+
     @FXML
     private CheckBox ContentCheckBox;
+
     @FXML
     private CheckBox DateCheckBox;
+
     @FXML
     private Button DirectoryChooseButton;
+
     @FXML
     private TextField DirectoryPath;
+
     @FXML
     private TextField FileNameField;
+
     @FXML
     private TextArea FilesArea;
+
+    @FXML
+    private Label InfoLabel;
+
+    @FXML
+    private AnchorPane LogsAnchorPane;
+
     @FXML
     private TextArea LogsArea;
+
+    @FXML
+    private AnchorPane MainWindow;
+
     @FXML
     private CheckBox NameCheckBox;
+
     @FXML
     private Button SearchButton;
+
     @FXML
     private CheckBox SizeCheckBox;
 
@@ -316,6 +337,8 @@ public class MainViewController {
                 controller.loadDuplicatesList();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
+                stage.setMinHeight(600);
+                stage.setMinWidth(1250);
                 stage.show();
 
             }
@@ -368,6 +391,7 @@ public class MainViewController {
     @FXML
     void initialize(){
 
+
         originalsAndDuplicates = new HashMap<>();
 
         //Начальное значение пути
@@ -408,7 +432,6 @@ public class MainViewController {
         });
 
 
-
         //Логика для кнопок очистки
         CleanFiles.setOnAction(actionEvent -> {
             FilesArea.clear();
@@ -429,8 +452,6 @@ public class MainViewController {
                 System.out.println(e.getMessage());
             }
         });
-
-
 
 
 

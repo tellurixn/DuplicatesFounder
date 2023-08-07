@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="150.0" prefWidth="400.0" stylesheets="@../../../Styles/MainWindowStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.duplcatesearcher.ProgressController">
+<AnchorPane minHeight="150.0" minWidth="400.0" stylesheets="@../../../Styles/MainWindowStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.duplcatesearcher.ProgressController">
    <children>
       <ProgressBar fx:id="progressBar" layoutX="11.0" layoutY="83.0" prefHeight="19.0" prefWidth="375.0" progress="0.0" visible="false" />
       <Label fx:id="processLabel" layoutX="128.0" layoutY="24.0" text="Выполнение.." textFill="#18cf77">
@@ -20,11 +20,6 @@
       <Text fx:id="SuccessMessage" fill="#17c93b" layoutX="157.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Успешно!" visible="false" wrappingWidth="82.4000244140625">
          <font>
             <Font size="18.0" />
-         </font>
-      </Text>
-      <Text fx:id="numberOfFiles" layoutX="126.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Найдено файлов: 0">
-         <font>
-            <Font name="Hack Regular" size="14.0" />
          </font>
       </Text>
    </children>
