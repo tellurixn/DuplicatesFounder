@@ -106,7 +106,7 @@
                         <TextArea fx:id="FilesArea" editable="false" prefHeight="94.0" prefWidth="800.0" promptText="Здесь будет список файлов..." styleClass="FilesArea" />
                         <Button fx:id="CleanFiles" alignment="CENTER" contentDisplay="CENTER" minHeight="25.0" minWidth="100.0" mnemonicParsing="false" text="Очистить" textAlignment="CENTER">
                            <StackPane.margin>
-                              <Insets bottom="5.0" right="15.0" />
+                              <Insets bottom="8.0" right="20.0" />
                            </StackPane.margin>
                         </Button>
                      </children>
@@ -116,7 +116,7 @@
                         <TextArea fx:id="LogsArea" editable="false" prefHeight="87.0" prefWidth="704.0" promptText="Здесь будут логи.." styleClass="LogsArea" />
                         <Button fx:id="CleanLogs" minHeight="25.0" minWidth="100.0" mnemonicParsing="false" text="Очистить">
                            <StackPane.margin>
-                              <Insets bottom="5.0" right="15.0" />
+                              <Insets bottom="8.0" right="20.0" />
                            </StackPane.margin>
                         </Button>
                      </children>

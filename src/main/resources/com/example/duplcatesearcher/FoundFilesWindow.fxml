@@ -40,6 +40,7 @@
                      <Font name="Hack Regular" size="17.0" />
                   </font>
                </Text>
+               <Text fx:id="numberOfDuplicates" fill="#fcf0f0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дубликатов: 0" textAlignment="CENTER" VBox.vgrow="SOMETIMES" />
             </children>
          </VBox>
       </top>
@@ -48,12 +49,12 @@
             <children>
                <TableView fx:id="DuplicatesTable" focusTraversable="false" minHeight="370.0" minWidth="1200.0">
                  <columns>
-                     <TableColumn fx:id="isOriginalColumn" maxWidth="-1.0" minWidth="80.0" text="Метка" />
+                     <TableColumn fx:id="isOriginalColumn" maxWidth="-1.0" minWidth="120.0" prefWidth="120.0" text="Метка" />
                      <TableColumn fx:id="isSelectedColumn" maxWidth="-1.0" minWidth="65.0" prefWidth="65.0" text="Удалить" />
                    <TableColumn fx:id="FileNameColumn" maxWidth="-1.0" minWidth="325.0" prefWidth="325.0" text="Имя" />
                    <TableColumn fx:id="SizeColumn" maxWidth="-1.0" minWidth="100.0" prefWidth="100.0" text="Размер, Мб" />
                      <TableColumn fx:id="DateColumn" maxWidth="-1.0" minWidth="300.0" prefWidth="300.0" text="Дата создания" />
-                     <TableColumn fx:id="PathColumn" maxWidth="-1.0" minWidth="330.0" prefWidth="-1.0" text="Путь" />
+                     <TableColumn fx:id="PathColumn" maxWidth="-1.0" minWidth="290.0" prefWidth="-1.0" text="Путь" />
                  </columns>
                </TableView>
             </children>

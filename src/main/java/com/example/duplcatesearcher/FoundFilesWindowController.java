@@ -10,59 +10,68 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class FoundFilesWindowController {
     @FXML
     private TableView<FileData> DuplicatesTable;
-
     @FXML
     private Button ExitButton;
-
+    @FXML
+    private Text numberOfDuplicates;
     @FXML
     private Button DeleteSelectedButton;
-
     @FXML
     private AnchorPane FFWAnchorPane;
-
     @FXML
     private TableColumn<FileData, String> FileNameColumn;
-
     @FXML
     private TableColumn<FileData, String> PathColumn;
-
     @FXML
     private TableColumn<FileData, Long> SizeColumn;
-
     @FXML
     private TableColumn<FileData, Date> DateColumn;
-
     @FXML
     private TableColumn<FileData, CheckBox> isSelectedColumn;
-
     @FXML
     private TableColumn<FileData, String> isOriginalColumn;
-
     private HashMap<Path,List<Path>> originalsAndDuplicatesMap;
 
     public void setOriginalsAndDuplicatesMap(HashMap<Path,List<Path>> originalsAndDuplicatesMap){
         this.originalsAndDuplicatesMap = originalsAndDuplicatesMap;
     }
-
     public HashMap<Path,List<Path>> getOriginalsAndDuplicatesMap(){
         return this.originalsAndDuplicatesMap;
     }
+    private void openDeletingWindow(List<File> files){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Progress.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            ProgressController controller = fxmlLoader.getController();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+            controller.setTargets(files);
+            controller.delete();
 
-
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private void deleteRow(List<FileData> rows){
+        for(FileData row : rows){
+            DuplicatesTable.getItems().remove(row);
+        }
+    }
     public void loadDuplicatesList(){
         //Установка столбцам таблицы соответсвующих значений класса FileData
         FileNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -86,11 +95,14 @@ public class FoundFilesWindowController {
 
         //Добавление строк в таблицу
         DuplicatesTable.setItems(list);
+        numberOfDuplicates.setText("Файлов с дубликатами: " + originsAndDuplics.size());
 
     }
 
+
     @FXML
     void initialize() throws IOException {
+
 
         //Открытие файла по двойному нажатию мыши
         DuplicatesTable.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -101,9 +113,7 @@ public class FoundFilesWindowController {
                     int row = pos.getRow();
 
                     FileData item = DuplicatesTable.getItems().get(row);
-
                     String data = item.getPath();
-
 
                     try {
                         Runtime.getRuntime().exec("explorer.exe /select," + data);
@@ -112,7 +122,6 @@ public class FoundFilesWindowController {
                     }
 
 
-                    System.out.println(data);
                 }
             }
         });
@@ -122,29 +131,20 @@ public class FoundFilesWindowController {
             public void handle(MouseEvent mouseEvent) {
                 if(mouseEvent.isPrimaryButtonDown()){
                     List<File> targets = new ArrayList<>();
+                    List<FileData> rowsToDelete = new ArrayList<>();
 
                     for(int i =0; i<DuplicatesTable.getItems().size(); i++) {
                         if(DuplicatesTable.getItems().get(i).isSelected()) {
                             targets.add(DuplicatesTable.getItems().get(i).getFile());
+                            rowsToDelete.add(DuplicatesTable.getItems().get(i));
                         }
                     }
 
+                    openDeletingWindow(targets);
+                    deleteRow(rowsToDelete);
 
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Progress.fxml"));
-                        Parent root = (Parent) fxmlLoader.load();
-                        ProgressController controller = fxmlLoader.getController();
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root));
-                        stage.setResizable(false);
-                        stage.show();
-                        controller.setTargets(targets);
-                        controller.delete();
 
-                    }
-                    catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
+
 
 
                 }

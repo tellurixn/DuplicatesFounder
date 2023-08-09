@@ -11,29 +11,24 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class DirectoryFileListGetter {
 
     private Path mainDirectoryPath;//Путь директори, которую выбрал пользователь
-
     private HashMap<Integer, Path> allFilesFromMainDirectory;//Хэшмап для хранения файлов
-
     private volatile int filesCompletedCounter;//Счетчик файлов
-
     private Alert infoAlert;
-
     private boolean isFinished;
-
     private boolean isCanceled;
-
-
-
     private Scene scene;
+
     DirectoryFileListGetter(){
         mainDirectoryPath = null;
         allFilesFromMainDirectory = new HashMap<Integer, Path>();
@@ -41,9 +36,6 @@ public class DirectoryFileListGetter {
         isFinished = false;
         isCanceled = false;
     }
-
-
-
     DirectoryFileListGetter(Path path){
         mainDirectoryPath = path;
         allFilesFromMainDirectory = new HashMap<>();
@@ -64,15 +56,12 @@ public class DirectoryFileListGetter {
     public HashMap<Integer,Path> getHashMapOfFilesFromMainDirectory() {
         return allFilesFromMainDirectory;
     }
-
     public boolean isWasCanceles(){
         return isCanceled;
     }
-
     public List<Path> getListOfFilesFromMainDirectory(){
         return new ArrayList<>(allFilesFromMainDirectory.values());
     }
-
     public synchronized void makeListOfFilesFromDirectory(Path directory, HashMap<Integer,Path> list){
             Path currentDirectory = directory; //Текущая папка
             File[] files = currentDirectory.toFile().listFiles();//Список файлов в текущей папке
@@ -112,9 +101,7 @@ public class DirectoryFileListGetter {
 
 
     }
-
-
-   public void run(MainViewController controller) {
+    public void run(MainViewController controller) {
        if (mainDirectoryPath.toFile().listFiles() != null) {
 
            infoAlert.show();
@@ -130,6 +117,11 @@ public class DirectoryFileListGetter {
                            public void run() {
                                infoAlert.close();
                                controller.writeFileList();
+                               try {
+                                   controller.findDuplicates();
+                               } catch (IOException e) {
+                                   throw new RuntimeException(e);
+                               }
                            }
                        });
 

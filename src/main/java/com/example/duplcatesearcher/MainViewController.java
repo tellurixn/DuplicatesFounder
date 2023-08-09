@@ -1,6 +1,7 @@
 package com.example.duplcatesearcher;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,60 +21,41 @@ import java.util.regex.Pattern;
 
 
 public class MainViewController {
-
     @FXML
     private Button CleanFiles;
-
     @FXML
     private Button CleanLogs;
-
     @FXML
     private CheckBox ContentCheckBox;
-
     @FXML
     private CheckBox DateCheckBox;
-
     @FXML
     private Button DirectoryChooseButton;
-
     @FXML
     private TextField DirectoryPath;
-
     @FXML
     private TextField FileNameField;
-
     @FXML
     private TextArea FilesArea;
-
     @FXML
     private Label InfoLabel;
-
     @FXML
     private AnchorPane LogsAnchorPane;
-
     @FXML
     private TextArea LogsArea;
-
     @FXML
     private AnchorPane MainWindow;
-
     @FXML
     private CheckBox NameCheckBox;
-
     @FXML
     private Button SearchButton;
-
     @FXML
     private CheckBox SizeCheckBox;
 
-
     //В хэшмапе хранятся ключ - оригинал файла, значение - найденный дубликат
     private HashMap<Path, List<Path>> originalsAndDuplicates;
-
     //В ридере хранится список файлов выбранной директории
     private DirectoryFileListGetter fileListGetter;
-
-
     //Метод для отображения списка файлов в указанной директории
     private void makeListOfFiles(){
         //По выбранной директори выполняем поиск файлов в новом потоке
@@ -82,7 +64,6 @@ public class MainViewController {
 
         fileListGetter.run(this);
     }
-
     public void writeFileList(){
         List<Path> list = fileListGetter.getListOfFilesFromMainDirectory();//Список файлов директории и вложенных директорий
 
@@ -117,7 +98,6 @@ public class MainViewController {
             }
         }
     }
-
     //Поиск вхождения введенной строки в имени файла
     private HashMap<Integer,Path> findMatches(DirectoryFileListGetter listGetter){
         String userFileName = FileNameField.getText();//Ввод пользователя
@@ -143,29 +123,6 @@ public class MainViewController {
 
         return matches;
     }
-
-    public void WriteLog(int NumOfDeletedFiles){
-        //Запись списка в файл
-        try {
-
-            File log = new File("Log.txt");
-            FileWriter fw = new FileWriter(log, true);
-            PrintWriter printWriter = new PrintWriter(fw);
-
-            // Инициализация объекта date
-            Date date = new Date();
-
-            // Вывод текущей даты и времени с использованием toString()
-            String currentDate = date.toString();
-
-            printWriter.println(currentDate + "\nУдалено файлов: " + NumOfDeletedFiles );
-            printWriter.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
     //Метод для записи данных файла в строку
     private String readFileAsString(String filePath) throws IOException {
         StringBuffer fileData = new StringBuffer();
@@ -180,8 +137,6 @@ public class MainViewController {
         reader.close();
         return fileData.toString();
     }
-
-
     //Сравниваем два файла в зависимости от установленных чекбоксов
     private Path compareFiles(Path firstPath, Path secondPath) throws IOException {
         File first = new File(firstPath.toString());
@@ -289,65 +244,92 @@ public class MainViewController {
 
         return first.toPath();
     }
-
-
-    private void findDuplicates() throws IOException {
-        //Начальное значение пути
-
-
+    public void findDuplicates() throws IOException {
         //Проверка полей на заполнение
         if(!DirectoryPath.getText().isEmpty() && !FileNameField.getText().isEmpty() && !fileListGetter.isWasCanceles()
-                && (NameCheckBox.isSelected() || SizeCheckBox.isSelected() || DateCheckBox.isSelected()) || ContentCheckBox.isSelected()) {
-            HashMap<Integer,Path> foundFiles = findMatches(fileListGetter);//Записываем в хэшмап дубликаты в директории
+                && (NameCheckBox.isSelected() || SizeCheckBox.isSelected() || DateCheckBox.isSelected())
+                || ContentCheckBox.isSelected()
+        ) {
+
+            Alert waitAlert = new Alert(Alert.AlertType.INFORMATION,"Инициализая..",ButtonType.CANCEL);
+            waitAlert.setHeaderText("Выполняется поиск, пожалуйста подождите");
+            waitAlert.setTitle("Выполнение..");
+            waitAlert.show();
+            Task<Void> makeDuolicateListTask = new Task<Void>(){
+                @Override
+                protected Void call() throws Exception {
+
+                    boolean isCanceled = false;
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            waitAlert.setContentText("Поиск совпадений по имени..");
+                        }
+                    });
+
+                    HashMap<Integer,Path> foundFiles = findMatches(fileListGetter);
+                    //Записываем в хэшмап дубликаты в директории
 
 
-            //Получение ключей и значений словаря
-            Set<Integer> keys = foundFiles.keySet();
-            ArrayList<Path> values= new ArrayList<>(foundFiles.values());
+                    //Получение ключей и значений словаря
+                    Set<Integer> keys = foundFiles.keySet();
+                    ArrayList<Path> values= new ArrayList<>(foundFiles.values());
 
 
+                    List<Integer> indexes = new ArrayList<>();//Индексы найденных оригиналов и дубликатов
+                    for(Path file : values){
+                        indexes.add(values.indexOf(file));//Добавить индекс оригинала
+                        List<Path> duplicatesList = new ArrayList<>();//Список дубликатов
 
-            List<Integer> indexes = new ArrayList<>();//Индексы найденных оригиналов и дубликатов
-            for(Path file : values){
-                indexes.add(values.indexOf(file));//Добавить индекс оригинала
-                List<Path> duplicatesList = new ArrayList<>();//Список дубликатов
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                waitAlert.setContentText("Поиск дубликата для файла: " + file.getFileName());
+                            }
+                        });
 
-                for(Path potential : values){
-                    //Если файл не является оригиналом/дубликатом для другого файла и файлы одинаковы
-                    if(!indexes.contains(values.indexOf(potential)) && potential.equals(compareFiles(file,potential))){
-                        duplicatesList.add(potential);//Пополняем список дубликатов
-                        indexes.add(values.indexOf(potential));//Добавляем индекс файла в список
+                        for(Path potential : values){
+                            if(waitAlert.getResult()==ButtonType.CANCEL) {
+                                isCanceled = true;
+                                break;
+                            }
+
+                            //Если файл не является оригиналом/дубликатом для другого файла и файлы одинаковы
+                            if(!indexes.contains(values.indexOf(potential))
+                                    && potential.equals(compareFiles(file,potential))){
+                                duplicatesList.add(potential);//Пополняем список дубликатов
+                                indexes.add(values.indexOf(potential));//Добавляем индекс файла в список
+                            }
+
+                        }
+
+
+                        //Если дуликаты для файла найдены пополним словарь
+                        if(!duplicatesList.isEmpty()){
+                            originalsAndDuplicates.put(file,duplicatesList);
+                        }
+
                     }
+
+
+                    if(!isCanceled) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                waitAlert.close();
+                                openWindowWithResult();
+                                originalsAndDuplicates.clear();
+                                LogUpdate();
+                            }
+                        });
+                    }
+                    return null;
                 }
+            };
 
-                //Если дуликаты для файла найдены пополним словарь
-                if(!duplicatesList.isEmpty()){
-                    originalsAndDuplicates.put(file,duplicatesList);
-                }
+            Thread makeDuplicateListThread = new Thread(makeDuolicateListTask);
+            makeDuplicateListThread.start();
 
-            }
-
-
-            //Открытие окна со списком найденных файлов
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FoundFilesWindow.fxml"));
-                Parent root = (Parent) fxmlLoader.load();
-                FoundFilesWindowController controller = fxmlLoader.getController();
-                controller.setOriginalsAndDuplicatesMap(originalsAndDuplicates);
-                controller.loadDuplicatesList();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setMinHeight(600);
-                stage.setMinWidth(1250);
-                stage.show();
-
-            }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-
-            originalsAndDuplicates.clear();
 
         }
         else {
@@ -369,7 +351,47 @@ public class MainViewController {
 
 
     }
+    private void openWindowWithResult(){
+        //Открытие окна со списком найденных файлов
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FoundFilesWindow.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            FoundFilesWindowController controller = fxmlLoader.getController();
+            controller.setOriginalsAndDuplicatesMap(originalsAndDuplicates);
+            controller.loadDuplicatesList();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setMinHeight(600);
+            stage.setMinWidth(1250);
+            stage.show();
 
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }
+    }
+    public void WriteLog(int NumOfDeletedFiles){
+        //Запись списка в файл
+        try {
+
+            File log = new File("Log.txt");
+            FileWriter fw = new FileWriter(log, true);
+            PrintWriter printWriter = new PrintWriter(fw);
+
+            // Инициализация объекта date
+            Date date = new Date();
+
+            // Вывод текущей даты и времени с использованием toString()
+            String currentDate = date.toString();
+
+            printWriter.println(currentDate + "\nУдалено файлов: " + NumOfDeletedFiles );
+            printWriter.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     public void LogUpdate()  {
         //Инициализация окна с логами
         try {
@@ -390,8 +412,6 @@ public class MainViewController {
     //Инициализация переменных и обработка событий кнопок
     @FXML
     void initialize(){
-
-
         originalsAndDuplicates = new HashMap<>();
 
         //Начальное значение пути
@@ -414,22 +434,15 @@ public class MainViewController {
                 //Установка пути к директории в поле
                 DirectoryPath.setText(selectedDirectory);
 
-                makeListOfFiles();
-
             }
         });
 
 
         //Поиск дубликатов
         SearchButton.setOnAction(actionEvent -> {
-            try {
-                findDuplicates();
-                LogUpdate();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+                makeListOfFiles();
         });
+
 
 
         //Логика для кнопок очистки

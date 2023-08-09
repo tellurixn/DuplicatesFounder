@@ -34,7 +34,6 @@ public class ProgressController {
 
     @FXML
     private ProgressBar progressBar;
-
     List<File> targets;//Список файлов для удаления
 
     public void setTargets(List<File> targets){
@@ -45,8 +44,10 @@ public class ProgressController {
         return targets;
     }
 
+
     public void delete(){
         targets = getTargets();
+        List<File> files = new ArrayList<>(targets);
 
         double percent = 1000 / (double) targets.size();
 
@@ -71,6 +72,7 @@ public class ProgressController {
         MainViewController controller = fxmlLoader.getController();
         controller.WriteLog(targets.size());
         controller.LogUpdate();
+
 
 
     }
