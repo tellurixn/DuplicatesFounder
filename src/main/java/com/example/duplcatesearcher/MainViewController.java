@@ -103,9 +103,8 @@ public class MainViewController {
         String userFileName = FileNameField.getText();//Ввод пользователя
         String userRegEx = "";
 
-        //Для введнной строки строится регулярное выражение для "жадного" поиска
-        if(userFileName.indexOf('*')!=0)
-            userRegEx = userFileName.replace("*",".+");
+        //Для введнной строки строится регулярное выражение для "ленивого" поиска
+        userRegEx = userFileName.replace("*",".+?");
 
 
         HashMap<Integer,Path> matches = new HashMap<>();//найденные совпадения
